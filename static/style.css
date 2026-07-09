@@ -1,0 +1,93 @@
+/* ----------------------------------
+   General Page Styling
+-----------------------------------*/
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f4f4f4;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    height:100vh;
+}
+
+
+/* ----------------------------------
+   Login Box
+-----------------------------------*/
+
+.login-box{
+
+    background:white;
+
+    padding:30px;
+
+    width:300px;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+
+}
+
+
+/* ----------------------------------
+   Input Boxes
+-----------------------------------*/
+
+input{
+
+    width:100%;
+
+    padding:10px;
+
+    margin-top:10px;
+
+    margin-bottom:15px;
+
+    box-sizing:border-box;
+
+}
+
+
+/* ----------------------------------
+   Login Button
+-----------------------------------*/
+
+button{
+
+    width:100%;
+
+    padding:10px;
+
+    border:none;
+
+    background:#2b7cff;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#195dc4;
+
+}
+
+
+/* ----------------------------------
+   Error Message
+-----------------------------------*/
+
+.error{
+
+    color:red;
+
+    margin-bottom:10px;
+
+}
