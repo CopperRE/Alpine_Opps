@@ -4,7 +4,13 @@
 
 body{
     font-family: Arial, Helvetica, sans-serif;
-    background:#f4f4f4;
+    background:#f3f4f6;
+
+    background-image: url("/static/images/logo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 900px; /* Change image size */
+    
 
     display:flex;
     justify-content:center;
@@ -20,9 +26,9 @@ body{
 
 .login-box{
 
-    background:white;
+    background:rgba(255, 255, 255, 0.7);
 
-    padding:30px;
+    padding:10px;
 
     width:300px;
 
@@ -32,6 +38,25 @@ body{
 
 }
 
+/* ----------------------------------
+   Login Header
+-----------------------------------*/
+
+#logtit{
+    
+    color:#4a4a4a;
+
+    text-align:center;
+
+}
+
+#logdes{
+
+    color:#6b7280;
+
+    text-align:center;
+    
+}
 
 /* ----------------------------------
    Input Boxes
@@ -64,7 +89,7 @@ button{
 
     border:none;
 
-    background:#2b7cff;
+    background:#1f2937;
 
     color:white;
 
@@ -75,7 +100,7 @@ button{
 
 button:hover{
 
-    background:#195dc4;
+    background:#3a4c65;
 
 }
 
