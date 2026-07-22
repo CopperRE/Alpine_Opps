@@ -127,8 +127,8 @@ def dashboard():
 @app.route("/logout")
 def logout():
 
-    # Remove the stored username
-    session.pop("email", None)
+    # Remove all session data
+    session.clear()
 
     # Return to login page
     return redirect(url_for("login_page"))
