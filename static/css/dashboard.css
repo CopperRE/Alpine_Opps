@@ -1,0 +1,151 @@
+/* ==============================
+   ALL FILES SECTION
+============================== */
+
+.files-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+.files-header h1{
+    font-size:32px;
+    color:#333;
+    font-weight:600;
+}
+
+
+/* Filter Button */
+
+.filter-btn{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:10px 18px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#2563eb;
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    transition:.2s;
+}
+
+.filter-btn:hover{
+    background:#1d4ed8;
+}
+
+
+/* ==============================
+   TABLE
+============================== */
+
+.file-table{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
+
+/* Table Header */
+
+.table-head{
+    display:grid;
+
+    grid-template-columns:
+        3fr
+        2fr
+        2fr
+        1fr;
+
+    background:#f3f4f6;
+
+    padding:18px 25px;
+
+    font-weight:bold;
+    color:#555;
+    border-bottom:2px solid #e5e7eb;
+}
+
+
+/* Table Rows */
+
+.table-row{
+    display:grid;
+
+    grid-template-columns:
+        3fr
+        2fr
+        2fr
+        1fr;
+
+    padding:18px 25px;
+
+    align-items:center;
+
+    border-bottom:1px solid #ededed;
+
+    transition:.2s;
+
+    font-size:15px;
+}
+
+
+/* Remove last border */
+
+.table-row:last-child{
+    border-bottom:none;
+}
+
+
+/* Hover */
+
+.table-row:hover{
+    background:#f8fbff;
+    cursor:pointer;
+}
+
+
+/* Text */
+
+.table-row div{
+    color:#444;
+}
+
+
+/* File Name */
+
+.table-row div:first-child{
+    font-weight:600;
+}
+
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media(max-width:900px){
+
+.table-head,
+.table-row{
+
+    grid-template-columns:
+        2fr
+        2fr
+        2fr
+        1fr;
+
+    font-size:14px;
+
+}
+}

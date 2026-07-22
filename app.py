@@ -17,7 +17,7 @@ def initialise_database():
 
         UserID INTEGER PRIMARY KEY AUTOINCREMENT,
 
-        Username TEXT UNIQUE NOT NULL,
+        Email TEXT UNIQUE NOT NULL,
 
         Password TEXT NOT NULL
 
@@ -27,11 +27,11 @@ def initialise_database():
     # Insert the Administrator account
     cursor.execute("""
     INSERT OR IGNORE INTO Users
-    (Username, Password)
+    (Email, Password)
 
     VALUES
 
-    ('Administrator', '1234')
+    ('Admin', '1234')
     """)
 
     # Save the changes
@@ -71,7 +71,7 @@ def login_page():
 @app.route("/login", methods=["POST"])
 def login():
 
-    username = request.form.get("username")
+    email = request.form.get("email")
     password = request.form.get("password")
 
     # Connect to the database
@@ -84,9 +84,9 @@ def login():
         """
         SELECT UserID
         FROM Users
-        WHERE Username = ?
+        WHERE Email = ?
         AND Password = ?
-        """, (username, password)
+        """, (email, password)
     )
 
     user = cursor.fetchone()
@@ -95,13 +95,13 @@ def login():
 
     if user:
 
-        session["username"] = username
+        session["email"] = email
 
         return redirect(url_for("dashboard"))
 
     return render_template(
         "index.html",
-        error="Incorrect username or password."
+        error="Incorrect email or password."
     )
 
 
@@ -110,22 +110,13 @@ def login():
 # --------------------------------------------------
 # Only users who have logged in can access this page.
 
+
 @app.route("/dashboard")
 def dashboard():
 
-    # Check if someone is logged in
-    if "username" in session:
-
-        return f"""
-        <h1>Welcome {session['username']}</h1>
-
-        <p>You have successfully logged in.</p>
-
-        <a href='/logout'>Logout</a>
-        """
-
-    # If not logged in, return to login page
-    return redirect(url_for("login_page"))
+    if "email" not in session:
+        return redirect(url_for("login_page"))
+    return render_template("dashboard.html")
 
 
 # --------------------------------------------------
@@ -137,7 +128,7 @@ def dashboard():
 def logout():
 
     # Remove the stored username
-    session.pop("username", None)
+    session.pop("email", None)
 
     # Return to login page
     return redirect(url_for("login_page"))
