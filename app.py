@@ -1,6 +1,10 @@
 # Import the required Flask modules
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_mail import Mail, Message
 import sqlite3
+import random
+import time
+
 
 def initialise_database():
 
@@ -31,7 +35,7 @@ def initialise_database():
 
     VALUES
 
-    ('Admin', '1234')
+    ('26tweco@goodnews.vic.edu.au', '1234')
     """)
 
     # Save the changes
@@ -47,6 +51,19 @@ app = Flask(__name__)
 # Secret key is required for sessions (login system)
 # Can be anything
 app.secret_key = "SecretKey"
+
+# Email Configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'verify.alpineopps@gmail.com'
+app.config['MAIL_PASSWORD'] = 'gliz tycd xlin pfjs'
+
+mail = Mail(app)
+
+#Generate verification code
+def generate_code():
+    return str(random.randint(100000, 999999))
 
 # Create the database if required
 initialise_database()
@@ -95,9 +112,29 @@ def login():
 
     if user:
 
-        session["email"] = email
+        code = generate_code()
 
-        return redirect(url_for("dashboard"))
+        session["2fa_code"] = code
+        session["2fa_email"] = email
+        session["2fa_expiry"] = time.time() + 300
+
+        msg = Message(
+            "Alpine Opps Verification Code",
+            sender=app.config["MAIL_USERNAME"],
+            recipients=[email]
+        )
+
+        msg.body = f"""
+        Your Alpine Opps verification code is:
+
+        {code}
+
+        This code expires in 5 minutes.
+        """
+
+        mail.send(msg)
+
+        return redirect(url_for("verify"))
 
     return render_template(
         "index.html",
@@ -106,10 +143,44 @@ def login():
 
 
 # --------------------------------------------------
+# VERIFY ACCOUNT
+# --------------------------------------------------
+# Page for 2FA code entry.
+
+@app.route("/verify", methods=["GET", "POST"])
+def verify():
+
+    if request.method == "POST":
+
+        entered = request.form.get("code")
+
+        if time.time() > session.get("2fa_expiry", 0):
+            return "Verification code expired."
+
+        if entered == session.get("2fa_code"):
+
+            # User is now fully logged in
+            session["email"] = session["2fa_email"]
+
+            # Remove temporary 2FA data
+            session.pop("2fa_code", None)
+            session.pop("2fa_email", None)
+            session.pop("2fa_expiry", None)
+
+            return redirect(url_for("dashboard"))
+
+        return render_template(
+            "verify.html",
+            error="Incorrect verification code."
+        )
+
+    return render_template("verify.html")
+
+
+# --------------------------------------------------
 # DASHBOARD
 # --------------------------------------------------
 # Only users who have logged in can access this page.
-
 
 @app.route("/dashboard")
 def dashboard():
