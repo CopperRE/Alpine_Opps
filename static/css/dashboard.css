@@ -1,3 +1,400 @@
+/* ==========================================
+   GENERAL
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+
+    background:#f3f4f6;
+    color:#333;
+
+}
+
+.container{
+
+    display:flex;
+    height:100vh;
+
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.sidebar{
+
+    width:280px;
+
+    background:#ffffff;
+
+    border-right:1px solid #e5e7eb;
+
+    padding:30px 20px;
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.logo{
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:35px;
+
+}
+
+.logo img{
+
+    width:55px;
+
+}
+
+.logo h2{
+
+    font-size:28px;
+
+    color:#2563eb;
+
+}
+
+
+/* ==========================================
+   NEW BUTTON
+========================================== */
+
+.new-btn{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-bottom:30px;
+
+    transition:.2s;
+
+}
+
+.new-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+/* ==========================================
+   MENU
+========================================== */
+
+.menu{
+
+    margin-bottom:20px;
+
+}
+
+.menu-item{
+
+    padding:15px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    font-size:17px;
+
+}
+
+.menu-item:hover{
+
+    background:#eff6ff;
+
+}
+
+.active{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+}
+
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.main-content{
+
+    flex:1;
+
+    padding:40px;
+
+}
+
+
+/* ==========================================
+   TOP BAR
+========================================== */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:40px;
+
+}
+
+
+/* ==========================================
+   SEARCH BAR
+========================================== */
+
+.search-box{
+
+    width:500px;
+
+}
+
+.search-box input{
+
+    width:100%;
+
+    padding:15px 20px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:white;
+
+    font-size:16px;
+
+    outline:none;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+.logout-btn{
+
+    text-decoration:none;
+
+    background:#dc2626;
+
+    color:white;
+
+    padding:12px 24px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    transition:.2s;
+
+}
+
+.logout-btn:hover{
+
+    background:#b91c1c;
+
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.files-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.files-header h1{
+
+    font-size:34px;
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================
+   FILTER BUTTON
+========================================== */
+
+.filter-btn{
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px 24px;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.filter-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+/* ==========================================
+   FILE TABLE
+========================================== */
+
+.file-table{
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+/* Header */
+
+.table-head{
+
+    display:grid;
+
+    grid-template-columns:3fr 2fr 2fr 1fr;
+
+    background:#f8fafc;
+
+    padding:20px 30px;
+
+    font-weight:bold;
+
+    color:#666;
+
+    border-bottom:2px solid #e5e7eb;
+
+}
+
+
+/* Rows */
+
+.table-row{
+
+    display:grid;
+
+    grid-template-columns:3fr 2fr 2fr 1fr;
+
+    padding:20px 30px;
+
+    border-bottom:1px solid #f1f1f1;
+
+    transition:.2s;
+
+}
+
+.table-row:hover{
+
+    background:#f8fbff;
+
+}
+
+.table-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.table-row div:first-child{
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================
+   SCROLLBAR
+========================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#cbd5e1;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#94a3b8;
+
+}
+
 /* ==============================
    ALL FILES SECTION
 ============================== */
