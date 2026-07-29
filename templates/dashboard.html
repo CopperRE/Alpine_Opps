@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta 
+        name="viewport" 
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Dashboard</title>
 
-    <link rel="stylesheet" href="static/css/dashboard.css">
+    <link 
+        rel="stylesheet" 
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
 
 </head>
 
@@ -21,7 +28,10 @@
 
         <div class="logo">
 
-            <img src="static/images/logo.png" alt="Logo">
+            <img 
+                src="{{ url_for('static', filename='images/logo.png') }}" 
+                alt="Logo"
+            >
 
             <h2>Alpine Opps</h2>
 
@@ -82,6 +92,7 @@
 
         <section class="file-table">
 
+            <!-- Table column headings -->
             <div class="table-head">
 
                 <div>Name</div>
@@ -90,14 +101,67 @@
                 <div>File Size</div>
 
             </div>
+            <!--
+                Loop through every file sent from
+                the dashboard route in app.py.
+            -->
 
-            <div class="table-row">
+            {% for file in files %}
+                <div class="table-row">
 
-                <div>*******.pdf</div>
-                <div>Admin</div>
-                <div>** **** 20**</div>
-                <div>*** MB</div>
-            </div>
+                    <div class="file-name">
+                        <!--
+                            Clicking the filename sends its FileID
+                            to the open_file route.
+
+                            target="_blank" opens the external file
+                            in a new browser tab.
+                        -->
+                        <a
+                            href="{{ url_for('open_file', file_id=file['FileID']) }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="file-link"
+                        >
+
+                            <!-- Display a pin symbol for pinned files -->
+                            {% if file["IsPinned"] == 1 %}
+                                <span class="pin-icon">★</span>
+                            {% endif %}
+
+                            {{ file["FileName"] }}
+
+                        </a>
+
+                    </div>
+
+                    <div>
+                        {{ file["FileOwner"] }}
+                    </div>
+
+                    <div>
+                        {{ file["LastModified"] }}
+                    </div>
+
+                    <div>
+                        {{ file["FileSize"] }}
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <!--
+                    Displayed when the Files table
+                    does not contain any records.
+                -->
+                <div class="empty-files">
+
+                    No files are currently available.
+
+                </div>
+
+            {% endfor %}
 
         </section>
 

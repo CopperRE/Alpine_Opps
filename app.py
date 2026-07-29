@@ -28,6 +28,38 @@ def initialise_database():
     )
     """)
 
+
+    # --------------------------------------------------
+    # CREATE FILES TABLE
+    # --------------------------------------------------
+    # This table stores information about each file.
+    # It stores a link to the external file rather than
+    # storing the actual PDF or spreadsheet in SQLite.
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Files (
+
+        FileID INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        FileName TEXT NOT NULL,
+
+        FileType TEXT NOT NULL,
+
+        FileURL TEXT NOT NULL,
+
+        FileOwner TEXT NOT NULL,
+
+        LastModified TEXT NOT NULL,
+
+        FileSize TEXT,
+
+        IsPinned INTEGER DEFAULT 0
+
+    )
+    """)
+
+
+
     # Insert the Administrator account
     cursor.execute("""
     INSERT OR IGNORE INTO Users
@@ -38,10 +70,72 @@ def initialise_database():
     ('26tweco@goodnews.vic.edu.au', '1234')
     """)
 
-    # Save the changes
+    # --------------------------------------------------
+    # INSERT FILES
+    # --------------------------------------------------
+    # FileID is included so INSERT OR IGNORE does not
+    # create duplicate example files every time the app runs.
+    #
+    # Replace the example URLs with real Google Drive,
+    # OneDrive, Dropbox or other external file links.
+
+    cursor.execute("""
+    INSERT OR IGNORE INTO Files
+    (
+        FileID,
+        FileName,
+        FileType,
+        FileURL,
+        FileOwner,
+        LastModified,
+        FileSize,
+        IsPinned
+    )
+
+    VALUES
+    (
+        1,
+        'Design Breif.docx',
+        'DOCX',
+        'https://goodnewslc-my.sharepoint.com/:w:/g/personal/26tweco_goodnews_vic_edu_au/IQB1J7ZWOEj5Qb4F021onoFjAeZWCzHqCG8YRpGyzNDOWZc?e=8pB5cR',
+        'Admin',
+        '2 May 2026',
+        '20 KB',
+        1
+    )
+    """)
+
+    cursor.execute("""
+    INSERT OR IGNORE INTO Files
+    (
+        FileID,
+        FileName,
+        FileType,
+        FileURL,
+        FileOwner,
+        LastModified,
+        FileSize,
+        IsPinned
+    )
+
+    VALUES
+    (
+        2,
+        'Project Timeline SAT Part 2.xlsx',
+        'XLSX',
+        'https://goodnewslc-my.sharepoint.com/:x:/g/personal/26tweco_goodnews_vic_edu_au/IQCxNQO5zYi1Toxi9ByximM3AfrZ_wlvRLahMJqsSrz2D3Y?e=ehOtzK',
+        'Admin',
+        '16 July 2026',
+        '26 KB',
+        0
+    )
+    """)
+
+
+    # Save all database changes.
     connection.commit()
 
-    # Close the database
+    # Close the database connection.
     connection.close()
 
 
@@ -185,9 +279,75 @@ def verify():
 @app.route("/dashboard")
 def dashboard():
 
+    # If the user is not logged in,
+    # send them back to the login page.
     if "email" not in session:
         return redirect(url_for("login_page"))
-    return render_template("dashboard.html")
+
+    # Connect to the database.
+    connection = sqlite3.connect("user.db")
+
+    # Allow columns to be accessed by their names.
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    # Retrieve every file from the Files table.
+    # Pinned files are displayed first.
+    cursor.execute("""
+        SELECT *
+        FROM Files
+        ORDER BY IsPinned DESC, FileID DESC
+    """)
+
+    files = cursor.fetchall()
+
+    # Close the database connection.
+    connection.close()
+
+    # Send the files variable to dashboard.html.
+    return render_template(
+        "dashboard.html",
+        files=files
+    )
+
+
+# --------------------------------------------------
+# OPEN EXTERNAL FILE
+# --------------------------------------------------
+# This route finds the selected file's URL and
+# redirects the user to that external file.
+
+@app.route("/open-file/<int:file_id>")
+def open_file(file_id):
+
+    # Only logged-in users can open files.
+    if "email" not in session:
+        return redirect(url_for("login_page"))
+
+    # Connect to the database.
+    connection = sqlite3.connect("user.db")
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    # Find the file that has the selected FileID.
+    cursor.execute("""
+        SELECT FileURL
+        FROM Files
+        WHERE FileID = ?
+    """, (file_id,))
+
+    file = cursor.fetchone()
+
+    connection.close()
+
+    # Display an error if the file cannot be found.
+    if file is None:
+        return "File not found.", 404
+
+    # Redirect the browser to the external file link.
+    return redirect(file["FileURL"])
 
 
 # --------------------------------------------------

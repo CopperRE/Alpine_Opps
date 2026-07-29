@@ -527,22 +527,34 @@ body{
 }
 
 
-/* ==============================
-   RESPONSIVE
-============================== */
+/* ----------------------------------
+   File Links
+----------------------------------- */
 
-@media(max-width:900px){
-
-.table-head,
-.table-row{
-
-    grid-template-columns:
-        2fr
-        2fr
-        2fr
-        1fr;
-
-    font-size:14px;
-
+.file-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
 }
+
+.file-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+
+/* Star displayed beside pinned files */
+
+.pin-icon {
+    margin-right: 8px;
+    color: #e6a700;
+}
+
+
+/* Message displayed when there are no files */
+
+.empty-files {
+    padding: 30px;
+    text-align: center;
+    color: #6b7280;
 }
