@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Expired</title>
+    <link 
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/expired.css') }}"
+    >
+</head>
+
+<div class="login-box">
+
+    <h1 id="logtit">Code Expired</h1>
+
+    <h4 id="logdes">
+        Your verification code has expired. Return to the login page to request a new code.
+    </h4>
+
+    <div class="error">
+        Error: Verification code expired.
+    </div>
+
+    <a href="{{ url_for('login_page') }}" class="back-button">
+        Back to Login
+    </a>
+
+</div>
+
+</body>
+
+</html>

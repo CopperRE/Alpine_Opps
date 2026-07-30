@@ -4,12 +4,14 @@ from flask_mail import Mail, Message
 import sqlite3
 import random
 import time
+from werkzeug.security import generate_password_hash, check_password_hash
 
+DATABASE = "alpopp.db"
 
 def initialise_database():
 
     # Connect to the database
-    connection = sqlite3.connect("user.db")
+    connection = sqlite3.connect(DATABASE)
     # Access other fields later on
     connection.row_factory = sqlite3.Row
     # Create a cursor
@@ -23,11 +25,12 @@ def initialise_database():
 
         Email TEXT UNIQUE NOT NULL,
 
-        Password TEXT NOT NULL
+        Password TEXT NOT NULL,
+
+        Role TEXT NOT NULL DEFAULT 'User'
 
     )
     """)
-
 
     # --------------------------------------------------
     # CREATE FILES TABLE
@@ -59,16 +62,21 @@ def initialise_database():
     """)
 
 
+    # --------------------------------------------------
+    # INSERT ADMINISTRATOR ACCOUNT
+    # --------------------------------------------------
 
-    # Insert the Administrator account
+    admin_emailX = "26tweco@goodnews.vic.edu.au"
+    admin_passwordX = generate_password_hash("1234")
+
     cursor.execute("""
     INSERT OR IGNORE INTO Users
-    (Email, Password)
+    (Email, Password, Role)
 
-    VALUES
-
-    ('26tweco@goodnews.vic.edu.au', '1234')
-    """)
+    VALUES (?, ?, ?)
+    """,
+    (admin_emailX, admin_passwordX, 'Admin')
+    )
 
     # --------------------------------------------------
     # INSERT FILES
@@ -160,6 +168,7 @@ def generate_code():
     return str(random.randint(100000, 999999))
 
 # Create the database if required
+# --FOR USE IN DEBUGGING ONLY-- #
 initialise_database()
 
 
@@ -186,25 +195,26 @@ def login():
     password = request.form.get("password")
 
     # Connect to the database
-    connection = sqlite3.connect("user.db")
-
+    connection = sqlite3.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
 
     # Find a user with the matching username and password
     cursor.execute(
-        """
-        SELECT UserID
-        FROM Users
-        WHERE Email = ?
-        AND Password = ?
-        """, (email, password)
+    """
+    SELECT * FROM Users
+    WHERE Email = ?
+    """, (email,)
     )
 
     user = cursor.fetchone()
 
     connection.close()
 
-    if user:
+    if user and check_password_hash(user["Password"], password):
+        
+        session["email"] = user["Email"]
+        session["role"] = user["Role"]
 
         code = generate_code()
 
@@ -249,7 +259,12 @@ def verify():
         entered = request.form.get("code")
 
         if time.time() > session.get("2fa_expiry", 0):
-            return "Verification code expired."
+            
+            # Remove the expired verification information
+            session.pop("2fa_code", None)
+            session.pop("2fa_email", None)
+            session.pop("2fa_expiry", None)
+            return render_template("expired.html")
 
         if entered == session.get("2fa_code"):
 
@@ -285,7 +300,7 @@ def dashboard():
         return redirect(url_for("login_page"))
 
     # Connect to the database.
-    connection = sqlite3.connect("user.db")
+    connection = sqlite3.connect(DATABASE)
 
     # Allow columns to be accessed by their names.
     connection.row_factory = sqlite3.Row
@@ -326,7 +341,7 @@ def open_file(file_id):
         return redirect(url_for("login_page"))
 
     # Connect to the database.
-    connection = sqlite3.connect("user.db")
+    connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
 
     cursor = connection.cursor()

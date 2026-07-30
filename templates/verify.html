@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Verify Login</title>
+    <link 
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/verify.css') }}"
+    >
 </head>
 
 <body>
@@ -13,24 +17,37 @@
 
     <!-- Displays error messages -->
     {% if error %}
-        <p class="error">{{ error }}</p>
+        <p class="error">
+            {{ error }}
+        </p>
     {% endif %}
 
     <form method="POST" action="{{ url_for('verify') }}">
 
         <input
+            id="code"
             type="text"
             name="code"
             maxlength="6"
-            placeholder="123456"
-            required>
+            placeholder="Enter 6-digit code"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            required
+        >
 
-        <button type="submit">
+        <button type="submit" class="verify-button">
             Verify
         </button>
 
     </form>
+    
+    <a href="{{ url_for('login_page') }}" class="back-button">
+        Back to Login
+    </a>
 
+    <p class="verify-note">
+        Check your inbox or spam folder if you cannot find the email.
+    </p>
 </div>
 
 </body>

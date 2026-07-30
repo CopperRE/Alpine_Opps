@@ -1,0 +1,228 @@
+/* ----------------------------------
+   General Page Styling
+-----------------------------------*/
+
+body{
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:#f3f4f6;
+
+    background-image:url("/static/images/logo.png");
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:900px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    height:100vh;
+
+    margin:0;
+
+    overflow:hidden;
+
+}
+
+
+/* ----------------------------------
+   Verification Box
+-----------------------------------*/
+
+.login-box{
+
+    background:rgba(255,255,255,0.7);
+
+    padding:25px;
+
+    width:320px;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+
+}
+
+
+/* ----------------------------------
+   Header
+-----------------------------------*/
+
+#logtit{
+
+    color:#4a4a4a;
+
+    text-align:center;
+
+    margin-bottom:5px;
+
+}
+
+#logdes{
+
+    color:#6b7280;
+
+    text-align:center;
+
+    font-weight:normal;
+
+    margin-top:0;
+
+    margin-bottom:20px;
+
+}
+
+
+/* ----------------------------------
+   Labels
+-----------------------------------*/
+
+label{
+
+    display:block;
+
+    margin-bottom:6px;
+
+    color:#4a4a4a;
+
+    font-weight:bold;
+
+}
+
+
+/* ----------------------------------
+   Input Box
+-----------------------------------*/
+
+input{
+
+    width:100%;
+
+    padding:10px;
+
+    margin-bottom:20px;
+
+    border:1px solid #ccc;
+
+    border-radius:5px;
+
+    box-sizing:border-box;
+
+    font-size:16px;
+
+}
+
+
+/* ----------------------------------
+   Verify Button
+-----------------------------------*/
+
+.verify-button{
+
+    width:100%;
+
+    padding:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:5px;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+.verify-button:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+/* ----------------------------------
+   Back Button
+-----------------------------------*/
+
+.back-button{
+
+    display:block;
+
+    width:100%;
+
+    padding:10px;
+
+    margin-top:10px;
+
+    background:#6b7280;
+
+    color:white;
+
+    border:none;
+
+    border-radius:5px;
+
+    box-sizing:border-box;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+.back-button:hover{
+
+    background:#4b5563;
+
+}
+
+
+/* ----------------------------------
+   Error Message
+-----------------------------------*/
+
+.error{
+
+    background:#fdecea;
+
+    color:#b91c1c;
+
+    border:1px solid #f5c2c2;
+
+    border-radius:5px;
+
+    padding:10px;
+
+    margin-bottom:15px;
+
+    text-align:center;
+
+    font-size:14px;
+
+}
+
+
+/* ----------------------------------
+   Information Text
+-----------------------------------*/
+
+.verify-note{
+
+    color:#6b7280;
+
+    text-align:center;
+
+    margin-top:15px;
+
+    font-size:14px;
+
+}

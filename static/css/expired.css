@@ -1,0 +1,145 @@
+/* ----------------------------------
+   General Page Styling
+-----------------------------------*/
+
+body{
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:#f3f4f6;
+
+    background-image:url("/static/images/logo.png");
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:900px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    height:100vh;
+
+    margin:0;
+
+    overflow:hidden;
+
+}
+
+
+/* ----------------------------------
+   Expired Box
+-----------------------------------*/
+
+.login-box{
+
+    background:rgba(255,255,255,0.7);
+
+    padding:30px;
+
+    width:340px;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+
+    text-align:center;
+
+}
+
+
+/* ----------------------------------
+   Header
+-----------------------------------*/
+
+#logtit{
+
+    color:#4a4a4a;
+
+    margin-bottom:10px;
+
+}
+
+#logdes{
+
+    color:#6b7280;
+
+    font-weight:normal;
+
+    margin-bottom:25px;
+
+    line-height:1.5;
+
+}
+
+
+/* ----------------------------------
+   Error Message
+-----------------------------------*/
+
+.error{
+
+    background:#fdecea;
+
+    color:#b91c1c;
+
+    border:1px solid #f5c2c2;
+
+    border-radius:5px;
+
+    padding:12px;
+
+    margin-bottom:20px;
+
+    font-size:15px;
+
+}
+
+
+/* ----------------------------------
+   Back Button
+-----------------------------------*/
+
+.back-button{
+
+    display:block;
+
+    width:100%;
+
+    padding:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:5px;
+
+    font-size:16px;
+
+    transition:0.2s;
+
+    box-sizing:border-box;
+
+}
+
+.back-button:hover{
+
+    background:#1d4ed8;
+
+}
+
+
+/* ----------------------------------
+   Information Text
+-----------------------------------*/
+
+.info{
+
+    color:#6b7280;
+
+    font-size:14px;
+
+    margin-top:20px;
+
+}
