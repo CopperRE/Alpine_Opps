@@ -17,7 +17,10 @@ def initialise_database():
     # Create a cursor
     cursor = connection.cursor()
 
-    # Create the Users table
+    # --------------------------------------------------
+    # CREATE USERS TABLE
+    # --------------------------------------------------
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Users (
 
@@ -70,14 +73,18 @@ def initialise_database():
     admin_passwordX = generate_password_hash("1234")
 
     cursor.execute("""
-    INSERT OR IGNORE INTO Users
-    (Email, Password, Role)
-
-    VALUES (?, ?, ?)
-    """,
-    (admin_emailX, admin_passwordX, 'Admin')
+    SELECT UserID FROM Users WHERE Email = ?
+    """, (admin_emailX,)
     )
 
+    existing_admin = cursor.fetchone()
+
+    if existing_admin is None:
+        cursor.execute("""
+            INSERT INTO Users (Email, Password, Role)
+            VALUES (?, ?, ?)
+        """, (admin_emailX, admin_passwordX, "Admin"))
+   
     # --------------------------------------------------
     # INSERT FILES
     # --------------------------------------------------
