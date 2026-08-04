@@ -1,0 +1,6 @@
+new button done
+alert email api
+make pinned files
+pinned and recent 
+filter and search files
+admin controls

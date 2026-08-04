@@ -334,6 +334,21 @@ def dashboard():
     )
 
 
+# -----------------------------
+# New File Form
+# -----------------------------
+# This route displays the form for creating a new file.
+
+@app.route("/newfile")
+def newfile():
+
+    # Make sure the user is logged in
+    if "email" not in session:
+        return redirect(url_for("login_page"))
+
+    return render_template("newfile.html")
+
+
 # --------------------------------------------------
 # OPEN EXTERNAL FILE
 # --------------------------------------------------

@@ -36,10 +36,13 @@
             <h2>Alpine Opps</h2>
 
         </div>
-
-        <button class="new-btn">
-            New
-        </button>
+            
+        <!-- Takes the user to the New File page -->
+        <form action="{{ url_for('newfile') }}" method="GET">
+            <button type="submit" class="new-btn">
+                New
+            </button>
+        </form>
 
         <div class="menu">
 
