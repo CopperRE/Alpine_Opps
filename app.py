@@ -4,6 +4,7 @@ from flask_mail import Mail, Message
 import sqlite3
 import random
 import time
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 DATABASE = "alpopp.db"
@@ -55,7 +56,7 @@ def initialise_database():
 
         FileOwner TEXT NOT NULL,
 
-        LastModified TEXT NOT NULL,
+        LastAccessed TEXT NOT NULL,
 
         FileSize TEXT,
 
@@ -85,68 +86,6 @@ def initialise_database():
             VALUES (?, ?, ?)
         """, (admin_emailX, admin_passwordX, "Admin"))
    
-    # --------------------------------------------------
-    # INSERT FILES
-    # --------------------------------------------------
-    # FileID is included so INSERT OR IGNORE does not
-    # create duplicate example files every time the app runs.
-    #
-    # Replace the example URLs with real Google Drive,
-    # OneDrive, Dropbox or other external file links.
-
-    cursor.execute("""
-    INSERT OR IGNORE INTO Files
-    (
-        FileID,
-        FileName,
-        FileType,
-        FileURL,
-        FileOwner,
-        LastModified,
-        FileSize,
-        IsPinned
-    )
-
-    VALUES
-    (
-        1,
-        'Design Breif.docx',
-        'DOCX',
-        'https://goodnewslc-my.sharepoint.com/:w:/g/personal/26tweco_goodnews_vic_edu_au/IQB1J7ZWOEj5Qb4F021onoFjAeZWCzHqCG8YRpGyzNDOWZc?e=8pB5cR',
-        'Admin',
-        '2 May 2026',
-        '20 KB',
-        1
-    )
-    """)
-
-    cursor.execute("""
-    INSERT OR IGNORE INTO Files
-    (
-        FileID,
-        FileName,
-        FileType,
-        FileURL,
-        FileOwner,
-        LastModified,
-        FileSize,
-        IsPinned
-    )
-
-    VALUES
-    (
-        2,
-        'Project Timeline SAT Part 2.xlsx',
-        'XLSX',
-        'https://goodnewslc-my.sharepoint.com/:x:/g/personal/26tweco_goodnews_vic_edu_au/IQCxNQO5zYi1Toxi9ByximM3AfrZ_wlvRLahMJqsSrz2D3Y?e=ehOtzK',
-        'Admin',
-        '16 July 2026',
-        '26 KB',
-        0
-    )
-    """)
-
-
     # Save all database changes.
     connection.commit()
 
@@ -334,18 +273,77 @@ def dashboard():
     )
 
 
-# -----------------------------
-# New File Form
-# -----------------------------
-# This route displays the form for creating a new file.
+# --------------------------------------------------
+# NEW FILE FORM
+# --------------------------------------------------
+# GET displays the new file form.
+# POST adds the new file to the Files table.
 
-@app.route("/newfile")
+@app.route("/newfile", methods=["GET", "POST"])
 def newfile():
 
-    # Make sure the user is logged in
+    # Only logged-in users can add files.
     if "email" not in session:
         return redirect(url_for("login_page"))
 
+    # Process the form after the user submits it.
+    if request.method == "POST":
+
+        # Get the values entered into the form.
+        filename = request.form.get("filename", "").strip()
+        filetype = request.form.get("filetype", "").strip()
+        fileurl = request.form.get("fileurl", "").strip()
+        filesize = request.form.get("filesize", "").strip()
+
+        # Check that required fields are not empty.
+        if not filename or not filetype or not fileurl:
+            return render_template(
+                "newfile.html",
+                error="Please complete all required fields."
+            )
+
+        # Use the logged-in user's email as the owner.
+        fileowner = session["email"]
+
+        # The file has not been opened yet.
+        lastaccessed = "Never"
+
+        # Connect to the correct database.
+        connection = sqlite3.connect(DATABASE)
+        cursor = connection.cursor()
+
+        # Insert the new file record.
+        # IsPinned is set to 0 until pinning is added later.
+        cursor.execute("""
+            INSERT INTO Files
+            (
+                FileName,
+                FileType,
+                FileURL,
+                FileOwner,
+                LastAccessed,
+                FileSize,
+                IsPinned
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            filename,
+            filetype,
+            fileurl,
+            fileowner,
+            lastaccessed,
+            filesize,
+            0
+        ))
+
+        connection.commit()
+        connection.close()
+
+        # Return to the dashboard.
+        return redirect(url_for("dashboard"))
+
+    # Display the form for a GET request.
     return render_template("newfile.html")
 
 
@@ -365,7 +363,6 @@ def open_file(file_id):
     # Connect to the database.
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
 
     # Find the file that has the selected FileID.
@@ -377,11 +374,25 @@ def open_file(file_id):
 
     file = cursor.fetchone()
 
-    connection.close()
-
     # Display an error if the file cannot be found.
     if file is None:
+        connection.close()
         return "File not found.", 404
+
+    # Generate the current date and time.
+    current_time = datetime.now().strftime(
+        "%d %B %Y, %I:%M %p"
+    )
+
+    # Update the file's access time.
+    cursor.execute("""
+        UPDATE Files
+        SET LastAccessed = ?
+        WHERE FileID = ?
+    """, (current_time, file_id))
+
+    connection.commit()
+    connection.close()
 
     # Redirect the browser to the external file link.
     return redirect(file["FileURL"])

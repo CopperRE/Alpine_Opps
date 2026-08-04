@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Add New File</title>
+<!---
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/newfile.css') }}">
+-->
+</head>
+
+<body>
+
+<div class="form-box">
+
+    <h1>Add New File</h1>
+
+    <!--
+        Sends the completed form
+        to the /newfile route
+    -->
+    <form action="/newfile" method="POST">
+
+        <!-- File Name -->
+        <label>File Name</label>
+
+        <input
+            type="text"
+            id="filename"
+            name="filename"
+            required
+        >
+
+        <!-- File Type -->
+        <label>File Type</label>
+
+        <select 
+            id="filetype"
+            name="filetype"
+            placeholder="Select a file type"
+            required
+        >
+
+            <option value="PDF">PDF</option>
+
+            <option value="XLSX">Spreadsheet</option>
+
+            <option value="DOCX">Word Document</option>
+
+            <option value="PPTX">PowerPoint</option>
+
+            <option value="IMAGE">Image</option>
+
+            <option value="OTHER">Other</option>
+
+        </select>
+
+        <!-- URL or location of the file -->
+        <label>File URL</label>
+
+        <input
+            type="url"
+            id="fileurl"
+            name="fileurl"
+            placeholder="https://..."
+            required
+        >
+
+        <label for="filesize">File Size</label>
+        <input
+            type="text"
+            id="filesize"
+            name="filesize"
+            placeholder="Example: 20 KB"
+        >
+
+
+        <!-- Submit button -->
+        <button type="submit">
+
+            Add File
+
+        </button>
+
+    </form>
+
+    <!-- Return to dashboard -->
+    <a href="{{ url_for('dashboard') }}">
+
+        Back to Dashboard
+
+    </a>
+
+</div>
+
+</body>
+</html>
