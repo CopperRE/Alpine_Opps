@@ -110,32 +110,26 @@
             -->
 
             {% for file in files %}
-                <div class="table-row">
+                <!-- Clickable file row -->
+                <div
+                    class="table-row"
+                    onclick="window.open('{{ url_for('open_file', file_id=file['FileID']) }}', '_blank')"
+                    tabindex="0"
+                    role="button"
+
+                    onkeydown="if(event.key==='Enter' || event.key===' '){
+                        event.preventDefault();
+                        window.open('{{ url_for('open_file', file_id=file['FileID']) }}', '_blank');
+                    }" > <!-- Open with Enter or Space -->
 
                     <div class="file-name">
-                        <!--
-                            Clicking the filename sends its FileID
-                            to the open_file route.
+                        <!-- Show pin for pinned files -->
+                        {% if file["IsPinned"] == 1 %}
+                            <span class="pin-icon">★</span>
+                        {% endif %}
 
-                            target="_blank" opens the external file
-                            in a new browser tab.
-                        -->
-                        <a
-                            href="{{ url_for('open_file', file_id=file['FileID']) }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="file-link"
-                        >
-
-                            <!-- Display a pin symbol for pinned files -->
-                            {% if file["IsPinned"] == 1 %}
-                                <span class="pin-icon">★</span>
-                            {% endif %}
-
-                            {{ file["FileName"] }}
-
-                        </a>
-
+                        <!-- Display file name -->
+                        {{ file["FileName"] }}
                     </div>
 
                     <div>
