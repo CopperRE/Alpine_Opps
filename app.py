@@ -290,13 +290,13 @@ def newfile():
     if request.method == "POST":
 
         # Get the values entered into the form.
-        filename = request.form.get("filename", "").strip()
+        file_name = request.form.get("file_name", "").strip()
         filetype = request.form.get("filetype", "").strip()
-        fileurl = request.form.get("fileurl", "").strip()
-        filesize = request.form.get("filesize", "").strip()
+        file_url = request.form.get("file_url", "").strip()
+        file_size = request.form.get("file_size", "").strip()
 
         # Check that required fields are not empty.
-        if not filename or not filetype or not fileurl:
+        if not file_name or not filetype or not file_url:
             return render_template(
                 "newfile.html",
                 error="Please complete all required fields."
@@ -328,12 +328,12 @@ def newfile():
 
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
-            filename,
+            file_name,
             filetype,
-            fileurl,
+            file_url,
             fileowner,
             lastaccessed,
-            filesize,
+            file_size,
             0
         ))
 

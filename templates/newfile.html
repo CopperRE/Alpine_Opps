@@ -5,96 +5,132 @@
 
     <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Add New File</title>
-<!---
+
     <link rel="stylesheet"
         href="{{ url_for('static', filename='css/newfile.css') }}">
--->
+
 </head>
 
 <body>
 
-<div class="form-box">
+    <!-- Top-left navigation area -->
+    <header class="page-header">
 
-    <h1>Add New File</h1>
+        <!-- Website logo and name -->
+        <div class="logo">
 
-    <!--
-        Sends the completed form
-        to the /newfile route
-    -->
-    <form action="/newfile" method="POST">
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="Alpine Opps Logo"
+            >
 
-        <!-- File Name -->
-        <label>File Name</label>
+            <h2>Alpine Opps</h2>
 
-        <input
-            type="text"
-            id="filename"
-            name="filename"
-            required
+        </div>
+
+        <!-- Return to the dashboard -->
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="return-btn"
         >
+            Return
+        </a>
 
-        <!-- File Type -->
-        <label>File Type</label>
+    </header>
 
-        <select 
-            id="filetype"
-            name="filetype"
-            placeholder="Select a file type"
-            required
-        >
+    <!-- Centres the form on the page -->
+    <main class="form-container">
 
-            <option value="PDF">PDF</option>
+        <section class="form-card">
 
-            <option value="XLSX">Spreadsheet</option>
+            <h1>Add New File</h1>
 
-            <option value="DOCX">Word Document</option>
+            <p class="form-description">
+                Enter the file information below.
+            </p>
 
-            <option value="PPTX">PowerPoint</option>
+            <form action="{{ url_for('newfile') }}" method="POST">
 
-            <option value="IMAGE">Image</option>
+                <div class="form-group">
+                    <label for="file_name">File Name</label>
 
-            <option value="OTHER">Other</option>
+                    <input
+                        type="text"
+                        id="file_name"
+                        name="file_name"
+                        placeholder="Enter the file name"
+                        required
+                    >
+                </div>
+                       
+                <!-- File Type -->
+                <div class="form-group">
+                    <label for="file_type">File Type</label>
 
-        </select>
+                    <select 
+                        id="filetype"
+                        name="filetype"
+                        placeholder="Select a file type"
+                        required
+                    >
 
-        <!-- URL or location of the file -->
-        <label>File URL</label>
+                        <option value="PDF">PDF</option>
 
-        <input
-            type="url"
-            id="fileurl"
-            name="fileurl"
-            placeholder="https://..."
-            required
-        >
+                        <option value="XLSX">Spreadsheet</option>
 
-        <label for="filesize">File Size</label>
-        <input
-            type="text"
-            id="filesize"
-            name="filesize"
-            placeholder="Example: 20 KB"
-        >
+                        <option value="DOCX">Word Document</option>
+
+                        <option value="PPTX">PowerPoint</option>
+
+                        <option value="IMAGE">Image</option>
+
+                        <option value="OTHER">Other</option>
+
+                    </select>
+                </div>
+                
+                <!-- URL or location of the file -->
+                <div class="form-group">
+                    <label for="file_url">File URL</label>
+
+                    <input
+                        type="url"
+                        id="file_url"
+                        name="file_url"
+                        placeholder="https://..."
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="file_size">File Size</label>
+                    
+                    <input
+                        type="text"
+                        id="file_size"
+                        name="file_size"
+                        placeholder="Example: 20 KB"
+                    >
+                </div>
 
 
-        <!-- Submit button -->
-        <button type="submit">
+                <!-- Submit button -->
+                <button type="submit" class="submit-btn">
+                    Add File
+                </button>
 
-            Add File
+            </form>
 
-        </button>
+        </section>
 
-    </form>
+    </main>
 
-    <!-- Return to dashboard -->
-    <a href="{{ url_for('dashboard') }}">
-
-        Back to Dashboard
-
-    </a>
-
-</div>
 
 </body>
 </html>
