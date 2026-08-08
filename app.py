@@ -6,6 +6,8 @@ import random
 import time
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+import requests
+import os
 
 DATABASE = "alpopp.db"
 
@@ -100,12 +102,15 @@ app = Flask(__name__)
 # Can be anything
 app.secret_key = "SecretKey"
 
-# Email Configuration
+#--------------------------------------------------
+# VERIFICATION EMAIL
+#--------------------------------------------------
+
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'verify.alpineopps@gmail.com'
-app.config['MAIL_PASSWORD'] = 'gliz tycd xlin pfjs'
+app.config['MAIL_PASSWORD'] = 'zlyx sdyi zfeq erxk'
 
 mail = Mail(app)
 
@@ -116,6 +121,56 @@ def generate_code():
 # Create the database if required
 # --FOR USE IN DEBUGGING ONLY-- #
 initialise_database()
+
+
+# --------------------------------------------------
+# BREVO EMAIL API
+# --------------------------------------------------
+# Sends notification emails using the Brevo REST API.
+
+def send_update_email(to_email, subject, message):
+
+    # Brevo transactional email API endpoint.
+    url = "https://api.brevo.com/v3/smtp/email"
+
+    # Information required to access the API.
+    headers = {
+        "accept": "application/json",
+        "api-key": "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",
+        "content-type": "application/json"
+    }
+
+    # Email information sent to Brevo as JSON.
+    data = {
+        "sender": {
+            "name": "Alpine Opps",
+            "email": "verify.alpineopps@gmail.com"
+        },
+
+        "to": [
+            {
+                "email": to_email
+            }
+        ],
+
+        "subject": subject,
+
+        "htmlContent": f"""
+            <h2>Alpine Opps</h2>
+            <p>{message}</p>
+        """
+    }
+
+    # Send a POST request to the Brevo API.
+    response = requests.post(
+        url,
+        headers=headers,
+        json=data,
+        timeout=10
+    )
+
+    # Return whether the request was successful.
+    return response
 
 
 # --------------------------------------------------
@@ -340,6 +395,15 @@ def newfile():
         connection.commit()
         connection.close()
 
+        # Send an email notification using the Brevo API.
+        send_update_email(
+            session["email"],
+            "Alpine Opps - File Added",
+            f"""
+            The file <strong>{file_name}</strong> has been
+            successfully added to Alpine Opps.
+            """
+        )
         # Return to the dashboard.
         return redirect(url_for("dashboard"))
 

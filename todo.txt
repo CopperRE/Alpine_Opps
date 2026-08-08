@@ -1,6 +1,11 @@
-new button done
-alert email api
 make pinned files
-pinned and recent 
-filter and search files
-admin controls
+    pinned and recent 
+    filter and search files
+*ai api
+make usernames
+alert email api
+    sign in alert
+    file accessed alert
+*admin controls
+    add/del users
+    del files
