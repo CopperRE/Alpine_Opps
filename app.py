@@ -110,7 +110,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'verify.alpineopps@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zlyx sdyi zfeq erxk'
+app.config['MAIL_PASSWORD'] = 'APP PSSWRD'
 
 mail = Mail(app)
 
@@ -136,7 +136,7 @@ def send_update_email(to_email, subject, message):
     # Information required to access the API.
     headers = {
         "accept": "application/json",
-        "api-key": "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",
+     ###   "api-key": "API PSSWRD",###
         "content-type": "application/json"
     }
 
