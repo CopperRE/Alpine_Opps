@@ -91,7 +91,19 @@
 
             <div class="search-box">
 
-                <input type="text" placeholder="Search Files">
+                <!-- File search input -->
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search Files"
+                    autocomplete="off"
+                >
+
+                <!-- Search results dropdown -->
+                <div
+                    id="searchResults"
+                    class="search-results"
+                ></div>
 
             </div>
 
@@ -145,8 +157,8 @@
                     role="button"
 
                     onkeydown="if(event.key==='Enter' || event.key===' '){
-                        event.preventDefault();
-                        window.open('{{ url_for('open_file', file_id=file['FileID']) }}'f, '_blank');
+                    event.preventDefault();
+                    window.open('{{ url_for('open_file', file_id=file['FileID']) }}', '_blank');
                     }" > <!-- Open with Enter or Space -->
 
                     <div class="file-name">
@@ -209,6 +221,117 @@
         {% endfor %}
 
     </section>
+
+
+<script>
+
+    // Get search elements
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const searchResults =
+        document.getElementById("searchResults");
+
+
+    // Search whenever the user types
+    searchInput.addEventListener("input", async function () {
+
+        // Remove spaces from beginning and end
+        const searchText = searchInput.value.trim();
+
+        // Hide dropdown when search is empty
+        if (searchText === "") {
+            searchResults.innerHTML = "";
+            searchResults.style.display = "none";
+            return;
+        }
+
+        // Send search text to Flask
+        const response = await fetch(
+            `/search-files?q=${encodeURIComponent(searchText)}`
+        );
+
+        // Get matching files
+        const files = await response.json();
+
+        // Clear previous results
+        searchResults.innerHTML = "";
+
+
+        // Show message if nothing matches
+        if (files.length === 0) {
+
+            const noResults = document.createElement("div");
+
+            noResults.className = "search-no-results";
+            noResults.textContent = "No files found";
+
+            searchResults.appendChild(noResults);
+            searchResults.style.display = "block";
+
+            return;
+        }
+
+
+        // Create dropdown result for each file
+        files.forEach(file => {
+
+            const result = document.createElement("div");
+
+            result.className = "search-result";
+
+            const fileName =
+                document.createElement("div");
+
+            fileName.className = "search-result-name";
+            fileName.textContent = file.name;
+
+
+            const owner =
+                document.createElement("div");
+
+            owner.className = "search-result-owner";
+            owner.textContent = file.owner;
+
+
+            result.appendChild(fileName);
+            result.appendChild(owner);
+
+
+            // Open selected file
+            result.addEventListener("click", function () {
+
+                window.open(file.url, "_blank");
+
+                searchInput.value = "";
+                searchResults.innerHTML = "";
+                searchResults.style.display = "none";
+
+            });
+
+
+            searchResults.appendChild(result);
+
+        });
+
+
+        // Show dropdown
+        searchResults.style.display = "block";
+
+    });
+
+
+    // Close dropdown when clicking elsewhere
+    document.addEventListener("click", function (event) {
+
+        if (!event.target.closest(".search-box")) {
+            searchResults.style.display = "none";
+        }
+
+    });
+
+</script>
+
 
 </body>
 </html>

@@ -1,6 +1,4 @@
-make pinned files
-    pinned and recent 
-    filter and search files
+filter files
 *ai api
 make usernames
 alert email api

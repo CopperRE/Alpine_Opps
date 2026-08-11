@@ -1,5 +1,5 @@
 # Import the required Flask modules
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_mail import Mail, Message
 import sqlite3
 import random
@@ -336,6 +336,60 @@ def dashboard():
         pinned_files=pinned_files
     )
 
+
+# --------------------------------------------------
+# SEARCH FILES
+# --------------------------------------------------
+# Searches for files while the user types.
+
+@app.route("/search-files")
+def search_files():
+
+    # Only logged-in users can search.
+    if "email" not in session:
+        return jsonify([])
+
+    # Get what the user typed.
+    search = request.args.get("q", "").strip()
+
+    # Do not search if the box is empty.
+    if not search:
+        return jsonify([])
+
+    # Connect to database.
+    connection = sqlite3.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    # Find files containing the search text.
+    cursor.execute("""
+        SELECT FileID, FileName, FileOwner
+        FROM Files
+        WHERE FileName LIKE ?
+        ORDER BY FileName
+        LIMIT 8
+    """, (f"%{search}%",))
+
+    files = cursor.fetchall()
+
+    connection.close()
+
+    # Convert database results into JSON.
+    results = []
+
+    for file in files:
+        results.append({
+            "id": file["FileID"],
+            "name": file["FileName"],
+            "owner": file["FileOwner"],
+            "url": url_for(
+                "open_file",
+                file_id=file["FileID"]
+            )
+        })
+
+    return jsonify(results)
+    
 
 # --------------------------------------------------
 # PINNED FILES
