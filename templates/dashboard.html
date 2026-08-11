@@ -44,14 +44,40 @@
             </button>
         </form>
 
-        <div class="menu">
 
-            <div class="menu-item active">
-                <p>Pinned & Recent</p>
-            </div>
+        <!-- ================= Pinned Files ================= -->
+
+        <div class="pinned-section">
+            <!-- Pinned files heading -->
+            <h3 class="pinned-title">Pinned</h3>
+
+            <!-- Check if there are pinned files -->
+            {% if pinned_files %}
+
+                <!-- Loop through pinned files -->
+                {% for file in pinned_files %}
+
+                    <!-- Open pinned file -->
+                    <a
+                        class="pinned-file"
+                        href="{{ url_for('open_file', file_id=file['FileID']) }}"
+                        target="_blank"
+                    >
+                        {{ file["FileName"] }}
+                    </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <!-- Show if no files are pinned -->
+                <p class="no-pinned-files">
+                    No pinned files
+                </p>
+
+            {% endif %}
 
         </div>
-
     </aside>
 
 
@@ -102,6 +128,7 @@
                 <div>Owner</div>
                 <div>Last Accessed</div>
                 <div>File Size</div>
+                <div>Pin</div>
 
             </div>
             <!--
@@ -119,7 +146,7 @@
 
                     onkeydown="if(event.key==='Enter' || event.key===' '){
                         event.preventDefault();
-                        window.open('{{ url_for('open_file', file_id=file['FileID']) }}', '_blank');
+                        window.open('{{ url_for('open_file', file_id=file['FileID']) }}'f, '_blank');
                     }" > <!-- Open with Enter or Space -->
 
                     <div class="file-name">
@@ -144,27 +171,44 @@
                         {{ file["FileSize"] }}
                     </div>
 
-                </div>
+                <!-- Pin/unpin file -->
+                <form
+                    action="{{ url_for('toggle_pin', file_id=file['FileID']) }}"
+                    method="POST"
+                    class="pin-form"
+                    onclick="event.stopPropagation();"
+                >
 
-            {% else %}
+                    <button
+                        type="submit"
+                        class="pin-button"
+                    >
 
-                <!--
-                    Displayed when the Files table
-                    does not contain any records.
-                -->
-                <div class="empty-files">
+                        <!-- Change button based on pin status -->
+                        {% if file["IsPinned"] == 1 %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
 
-                    No files are currently available.
+                    </button>
 
-                </div>
+                </form>
 
-            {% endfor %}
+            </div>
 
-        </section>
+        {% else %}
 
-    </main>
+            <!-- Show when there are no files -->
+            <div class="empty-files">
 
-</div>
+                No files are currently available.
+
+            </div>
+
+        {% endfor %}
+
+    </section>
 
 </body>
 </html>

@@ -110,7 +110,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'verify.alpineopps@gmail.com'
-app.config['MAIL_PASSWORD'] = 'APP PSSWRD'
+app.config['MAIL_PASSWORD'] = 'zlyx sdyi zfeq erxk'
 
 mail = Mail(app)
 
@@ -136,7 +136,7 @@ def send_update_email(to_email, subject, message):
     # Information required to access the API.
     headers = {
         "accept": "application/json",
-     ###   "api-key": "API PSSWRD",###
+        "api-key": "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",
         "content-type": "application/json"
     }
 
@@ -302,10 +302,8 @@ def dashboard():
 
     # Connect to the database.
     connection = sqlite3.connect(DATABASE)
-
     # Allow columns to be accessed by their names.
     connection.row_factory = sqlite3.Row
-
     cursor = connection.cursor()
 
     # Retrieve every file from the Files table.
@@ -318,14 +316,76 @@ def dashboard():
 
     files = cursor.fetchall()
 
+ # Get only pinned files
+    cursor.execute("""
+        SELECT *
+        FROM Files
+        WHERE IsPinned = 1
+        ORDER BY FileName
+    """)
+
+    pinned_files = cursor.fetchall()
+
     # Close the database connection.
     connection.close()
 
     # Send the files variable to dashboard.html.
     return render_template(
         "dashboard.html",
-        files=files
+        files=files,
+        pinned_files=pinned_files
     )
+
+
+# --------------------------------------------------
+# PINNED FILES
+# --------------------------------------------------
+# Identify pinned files
+
+@app.route("/toggle_pin/<int:file_id>", methods=["POST"])
+def toggle_pin(file_id):
+
+    # Check user is logged in
+    if "email" not in session:
+        return redirect(url_for("login_page"))
+
+    # Connect to database
+    connection = sqlite3.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    # Get current pin value
+    cursor.execute(
+        "SELECT IsPinned FROM Files WHERE FileID = ?",
+        (file_id,)
+    )
+
+    file = cursor.fetchone()
+
+    # Check file exists
+    if file:
+
+        # Switch pinned value
+        if file["IsPinned"] == 1:
+            new_pin_value = 0
+        else:
+            new_pin_value = 1
+
+        # Update pinned value
+        cursor.execute("""
+            UPDATE Files
+            SET IsPinned = ?
+            WHERE FileID = ?
+        """, (new_pin_value, file_id))
+
+        # Save changes
+        connection.commit()
+
+    # Close database
+    connection.close()
+
+    # Return to dashboard
+    return redirect(url_for("dashboard"))
 
 
 # --------------------------------------------------
