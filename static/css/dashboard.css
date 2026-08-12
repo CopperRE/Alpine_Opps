@@ -522,11 +522,12 @@ Pin Button
     display:grid;
 
     grid-template-columns:
-        3fr
         2fr
-        2fr
+        1.5fr
+        1.5fr
         1fr
-        60px;
+        0.5fr
+        1fr;
 
     background:#f3f4f6;
 
@@ -544,11 +545,12 @@ Pin Button
     display:grid;
 
     grid-template-columns:
-        3fr
         2fr
-        2fr
+        1.5fr
+        1.5fr
         1fr
-        60px;
+        0.5fr
+        1fr;
 
     padding:18px 25px;
 
@@ -783,4 +785,21 @@ FILTER
 
 .filter-option:hover {
     background: #f3f4f6;
+}
+
+/* ==========================================
+   AI SUMMARY BUTTON
+========================================== */
+
+.ai-summary-btn {
+    text-decoration: none;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+}
+
+.ai-summary-btn:hover {
+    background: #1d4ed8;
 }
