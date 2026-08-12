@@ -718,6 +718,199 @@ def open_file(file_id):
 
 
 # --------------------------------------------------
+# ADMIN CONTROLS
+# --------------------------------------------------
+# Allows administrators to manage users and files.
+
+@app.route("/admin")
+def admin():
+
+    # Check user is logged in
+    if "email" not in session:
+        return redirect(url_for("login_page"))
+
+    # Only administrators can access this page
+    if session.get("role") != "Admin":
+        return redirect(url_for("dashboard"))
+
+    # Connect to database
+    connection = sqlite3.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    # Get all users
+    cursor.execute("""
+        SELECT UserID, Email, Role
+        FROM Users
+        ORDER BY UserID
+    """)
+
+    users = cursor.fetchall()
+
+    # Get all files
+    cursor.execute("""
+        SELECT *
+        FROM Files
+        ORDER BY FileID DESC
+    """)
+
+    files = cursor.fetchall()
+
+    # Close database
+    connection.close()
+
+    # Display admin page
+    return render_template(
+        "admin.html",
+        users=users,
+        files=files
+    )
+
+
+# --------------------------------------------------
+# ADMIN - ADD USER
+# --------------------------------------------------
+# Allows an administrator to create a new user.
+
+@app.route("/admin/add-user", methods=["POST"])
+def add_user():
+
+    # Only administrators can add users
+    if session.get("role") != "Admin":
+        return redirect(url_for("dashboard"))
+
+    # Get information from form
+    email = request.form.get("email", "").strip()
+    password = request.form.get("password", "").strip()
+    role = request.form.get("role", "User")
+
+    # Check fields are not empty
+    if not email or not password:
+        return redirect(url_for("admin"))
+
+    # Only allow valid roles
+    if role not in ["User", "Admin"]:
+        role = "User"
+
+    # Hash password before storing it
+    hashed_password = generate_password_hash(password)
+
+    # Connect to database
+    connection = sqlite3.connect(DATABASE)
+    cursor = connection.cursor()
+
+    try:
+
+        # Add new user
+        cursor.execute("""
+            INSERT INTO Users (
+                Email,
+                Password,
+                Role
+            )
+            VALUES (?, ?, ?)
+        """, (
+            email,
+            hashed_password,
+            role
+        ))
+
+        # Save changes
+        connection.commit()
+
+    except sqlite3.IntegrityError:
+
+        # Email already exists
+        pass
+
+    # Close database
+    connection.close()
+
+    # Return to admin page
+    return redirect(url_for("admin"))
+
+
+# --------------------------------------------------
+# ADMIN - DELETE USER
+# --------------------------------------------------
+# Allows an administrator to delete a user.
+
+@app.route("/admin/delete-user/<int:user_id>", methods=["POST"])
+def delete_user(user_id):
+
+    # Only administrators can delete users
+    if session.get("role") != "Admin":
+        return redirect(url_for("dashboard"))
+
+    # Connect to database
+    connection = sqlite3.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    # Find selected user
+    cursor.execute("""
+        SELECT *
+        FROM Users
+        WHERE UserID = ?
+    """, (user_id,))
+
+    user = cursor.fetchone()
+
+    # Check user exists
+    if user:
+
+        # Stop admin deleting their own account
+        if user["Email"] != session.get("email"):
+
+            # Delete selected user
+            cursor.execute("""
+                DELETE FROM Users
+                WHERE UserID = ?
+            """, (user_id,))
+
+            # Save changes
+            connection.commit()
+
+    # Close database
+    connection.close()
+
+    # Return to admin page
+    return redirect(url_for("admin"))
+
+
+# --------------------------------------------------
+# ADMIN - DELETE FILE
+# --------------------------------------------------
+# Allows an administrator to remove a file record.
+
+@app.route("/admin/delete-file/<int:file_id>", methods=["POST"])
+def delete_file(file_id):
+
+    # Only administrators can delete files
+    if session.get("role") != "Admin":
+        return redirect(url_for("dashboard"))
+
+    # Connect to database
+    connection = sqlite3.connect(DATABASE)
+    cursor = connection.cursor()
+
+    # Delete selected file
+    cursor.execute("""
+        DELETE FROM Files
+        WHERE FileID = ?
+    """, (file_id,))
+
+    # Save changes
+    connection.commit()
+
+    # Close database
+    connection.close()
+
+    # Return to admin page
+    return redirect(url_for("admin"))
+
+
+# --------------------------------------------------
 # LOGOUT
 # --------------------------------------------------
 # Removes the user from the session.
