@@ -120,11 +120,65 @@
 
             <h1>All Files</h1>
 
-            <button class="filter-btn">
+            <!-- Filter dropdown -->
+            <div class="filter-container">
 
-                Filter
+                <button
+                    class="filter-btn"
+                    id="filterButton"
+                    type="button"
+                >
+                    Filter
+                </button>
 
-            </button>
+                <div
+                    class="filter-menu"
+                    id="filterMenu"
+                >
+
+                    <button
+                        type="button"
+                        class="filter-option"
+                        data-filter="all"
+                    >
+                        All Files
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-option"
+                        data-filter="pdf"
+                    >
+                        PDF
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-option"
+                        data-filter="excel"
+                    >
+                        Excel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-option"
+                        data-filter="pinned"
+                    >
+                        Pinned
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-option"
+                        data-filter="unpinned"
+                    >
+                        Unpinned
+                    </button>
+
+                </div>
+
+            </div>
 
         </section>
 
@@ -152,7 +206,12 @@
                 <!-- Clickable file row -->
                 <div
                     class="table-row"
+                    data-file-type="{{ file['FileType'] | lower }}"
+                    data-owner="{{ file['FileOwner'] | lower }}"
+                    data-pinned="{{ file['IsPinned'] }}"
+                    
                     onclick="window.open('{{ url_for('open_file', file_id=file['FileID']) }}', '_blank')"
+                    
                     tabindex="0"
                     role="button"
 
@@ -330,6 +389,133 @@
 
     });
 
+    
+    // ==========================================
+    // FILE FILTER
+    // ==========================================
+
+    // Get filter elements
+    const filterButton =
+        document.getElementById("filterButton");
+
+    const filterMenu =
+        document.getElementById("filterMenu");
+
+    const filterOptions =
+        document.querySelectorAll(".filter-option");
+
+
+    // Open and close filter menu
+    filterButton.addEventListener("click", function (event) {
+
+        // Stop page click from immediately closing menu
+        event.stopPropagation();
+
+        filterMenu.classList.toggle("show");
+
+    });
+
+
+    // Run when a filter option is clicked
+    filterOptions.forEach(option => {
+
+        option.addEventListener("click", function () {
+
+            // Get selected filter
+            const selectedFilter =
+                option.dataset.filter;
+
+            // Get all file rows
+            const rows =
+                document.querySelectorAll(".table-row");
+
+
+            rows.forEach(row => {
+
+                // Get information stored on row
+                const fileType =
+                    row.dataset.fileType;
+
+                const pinned =
+                    row.dataset.pinned;
+
+
+                // Show all files by default
+                let showRow = true;
+
+
+                // PDF files
+                if (selectedFilter === "pdf") {
+
+                    showRow =
+                        fileType.includes("pdf");
+
+                }
+
+                // Excel files
+                else if (selectedFilter === "excel") {
+
+                    showRow =
+                        fileType.includes("excel") ||
+                        fileType.includes("xlsx") ||
+                        fileType.includes("xls");
+
+                }
+
+                // Pinned files
+                else if (selectedFilter === "pinned") {
+
+                    showRow =
+                        pinned === "1";
+
+                }
+
+                // Unpinned files
+                else if (selectedFilter === "unpinned") {
+
+                    showRow =
+                        pinned === "0";
+
+                }
+
+
+                // Show or hide row
+                if (showRow) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+
+            // Change button text
+            filterButton.textContent =
+                option.textContent.trim();
+
+
+            // Close filter menu
+            filterMenu.classList.remove("show");
+
+        });
+
+    });
+
+
+    // Close filter menu when clicking elsewhere
+    document.addEventListener("click", function (event) {
+
+        if (!event.target.closest(".filter-container")) {
+
+            filterMenu.classList.remove("show");
+
+        }
+
+    });
 </script>
 
 
