@@ -6,10 +6,17 @@ import random
 import time
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from openai import OpenAI
+import tempfile
 import requests
 import os
 
 DATABASE = "alpopp.db"
+
+# OpenAI API
+client = OpenAI(
+    api_key="YOUR_OPENAI_API_KEY_HERE"
+)
 
 def initialise_database():
 
@@ -523,6 +530,140 @@ def newfile():
 
     # Display the form for a GET request.
     return render_template("newfile.html")
+
+
+# --------------------------------------------------
+# AI FILE SUMMARY
+# --------------------------------------------------
+# Sends the selected file to OpenAI and creates
+# a summary of its contents.
+
+@app.route("/summarise/<int:file_id>")
+def summarise_file(file_id):
+
+    # Only logged-in users can use AI summaries.
+    if "email" not in session:
+        return redirect(url_for("login_page"))
+
+    # Connect to database.
+    connection = sqlite3.connect(DATABASE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    # Get selected file.
+    cursor.execute("""
+        SELECT *
+        FROM Files
+        WHERE FileID = ?
+    """, (file_id,))
+
+    file = cursor.fetchone()
+
+    connection.close()
+
+    # Check file exists.
+    if file is None:
+        return "File not found.", 404
+
+    # Download file from its URL.
+    try:
+        response = requests.get(
+            file["FileURL"],
+            timeout=20
+        )
+
+        response.raise_for_status()
+
+    except requests.RequestException:
+        return "Unable to download this file.", 400
+
+
+    # Get the file extension.
+    file_extension = os.path.splitext(
+        file["FileName"]
+    )[1]
+
+    # Create temporary copy of file.
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=file_extension
+    ) as temp_file:
+
+        temp_file.write(response.content)
+
+        temp_path = temp_file.name
+
+
+    try:
+
+        # Upload file to OpenAI.
+        with open(temp_path, "rb") as uploaded_file:
+
+            ai_file = client.files.create(
+                file=uploaded_file,
+                purpose="user_data"
+            )
+
+
+        # Ask OpenAI to summarise the file.
+        ai_response = client.responses.create(
+
+            model="gpt-5.4-mini",
+
+            input=[
+                {
+                    "role": "user",
+
+                    "content": [
+                        {
+                            "type": "input_file",
+                            "file_id": ai_file.id
+                        },
+
+                        {
+                            "type": "input_text",
+                            "text": """
+                            Summarise this file for the user.
+
+                            Include:
+                            - the main information
+                            - important financial information
+                            - important dates
+                            - notable transactions
+                            - outstanding payments if present
+                            - anything else important
+
+                            Keep the summary clear and concise.
+
+                            Do not make up information that is
+                            not contained in the file.
+                            """
+                        }
+                    ]
+                }
+            ]
+        )
+
+        # Get summary text.
+        summary = ai_response.output_text
+
+    except Exception as error:
+
+        return f"AI summary failed: {error}", 500
+
+    finally:
+
+        # Delete temporary file.
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
+    # Display summary page.
+    return render_template(
+        "summary.html",
+        file=file,
+        summary=summary
+    )
 
 
 # --------------------------------------------------
