@@ -163,6 +163,22 @@
                     <button
                         type="button"
                         class="filter-option"
+                        data-filter="word"
+                    >
+                        Word
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-option"
+                        data-filter="other"
+                    >
+                        Other
+                    </button>
+
+                    <button
+                        type="button"
+                        class="filter-option"
                         data-filter="pinned"
                     >
                         Pinned
@@ -275,7 +291,7 @@
                 >
                     Summarise
                 </a>
-                
+
             </div>
 
         {% else %}
@@ -469,6 +485,24 @@
                         fileType.includes("excel") ||
                         fileType.includes("xlsx") ||
                         fileType.includes("xls");
+
+                }
+
+                // Word files
+                else if (selectedFilter === "word") {
+
+                    showRow =
+                        fileType.includes("word") ||
+                        fileType.includes("doc") ||
+                        fileType.includes("docx");
+
+                }
+
+                // Other files
+                else if (selectedFilter === "other") {
+
+                    showRow =
+                        fileType.includes("other");
 
                 }
 
