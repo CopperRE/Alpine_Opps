@@ -1,11 +1,6 @@
-*ai api
-*admin controls
-    add/del users
-    del files
-
-    
 alert email api
     sign in alert
     file accessed alert
-
 make usernames
+
+XXXai apiXXX

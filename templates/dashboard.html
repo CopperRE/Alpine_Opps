@@ -232,7 +232,6 @@
                 <div>Last Accessed</div>
                 <div>File Size</div>
                 <div>Pin</div>
-                <div>AI Summary</div>
 
             </div>
             <!--
@@ -304,16 +303,9 @@
 
                 </form>
 
-                <!-- Create an AI summary of the file -->
-                <a
-                    href="{{ url_for('summarise_file', file_id=file['FileID']) }}"
-                    class="ai-summary-btn"
-                    onclick="event.stopPropagation();"
-                >
-                    Summarise
-                </a>
+                
 
-            </div>
+                </div>
 
         {% else %}
 

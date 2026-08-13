@@ -526,8 +526,7 @@ Pin Button
         1.5fr
         1.5fr
         1fr
-        0.5fr
-        1fr;
+        0.5fr;
 
     background:#f3f4f6;
 
@@ -549,8 +548,7 @@ Pin Button
         1.5fr
         1.5fr
         1fr
-        0.5fr
-        1fr;
+        0.5fr;
 
     padding:18px 25px;
 
@@ -593,9 +591,9 @@ Pin Button
 }
 
 
-/* ----------------------------------
+/* ==============================
    File Links
------------------------------------ */
+============================== */
 
 .file-link {
     color: #333;
@@ -787,22 +785,6 @@ FILTER
     background: #f3f4f6;
 }
 
-/* ==========================================
-   AI SUMMARY BUTTON
-========================================== */
-
-.ai-summary-btn {
-    text-decoration: none;
-    text-align: center;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: #2563eb;
-    color: white;
-}
-
-.ai-summary-btn:hover {
-    background: #1d4ed8;
-}
 
 /* ==========================================
 ACCOUNT BUTTONS
