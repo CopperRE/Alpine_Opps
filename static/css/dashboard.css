@@ -803,3 +803,44 @@ FILTER
 .ai-summary-btn:hover {
     background: #1d4ed8;
 }
+
+/* ==========================================
+ACCOUNT BUTTONS
+========================================== */
+
+/* Hold admin and logout buttons together */
+.account-buttons {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+/* Admin controls button */
+.admin-btn {
+
+    padding: 10px 18px;
+
+    background-color: #2563eb;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+}
+
+
+/* Change colour when hovering */
+.admin-btn:hover {
+
+    background-color: #1d4ed8;
+
+}

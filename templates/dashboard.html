@@ -107,9 +107,30 @@
 
             </div>
 
-            <a href="{{ url_for('logout') }}" class="logout-btn">
-                Logout
-            </a>
+            <!-- Account buttons -->
+            <div class="account-buttons">
+
+                <!-- Only show admin controls to administrators -->
+                {% if session.get("role") == "Admin" %}
+
+                    <a
+                        href="{{ url_for('admin') }}"
+                        class="admin-btn"
+                    >
+                        Admin Controls
+                    </a>
+
+                {% endif %}
+
+                <!-- Log user out -->
+                <a
+                    href="{{ url_for('logout') }}"
+                    class="logout-btn"
+                >
+                    Logout
+                </a>
+
+            </div>
 
         </header>
 
