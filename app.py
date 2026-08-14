@@ -211,11 +211,6 @@ def login():
 
     user = cursor.fetchone()
 
-    # DEBUG - Show email entered
-    print("DEBUG - Login email:", email)
-    # DEBUG - Show whether a matching user was found
-    print("DEBUG - User found:", user)
-
     connection.close()
 
     if user and check_password_hash(user["Password"], password):
@@ -483,7 +478,12 @@ def newfile():
         # The file has not been opened yet.
         lastaccessed = "Never"
 
-
+        print("DEBUG - File name:", file_name)
+        print("DEBUG - File type:", filetype)
+        print("DEBUG - File URL:", file_url)
+        print("DEBUG - File size:", file_size)
+        print("DEBUG - File owner:", fileowner)
+        print("DEBUG - Last accessed:", lastaccessed)
 
         # Connect to the correct database.
         connection = sqlite3.connect(DATABASE)
