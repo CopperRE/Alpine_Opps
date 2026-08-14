@@ -478,13 +478,6 @@ def newfile():
         # The file has not been opened yet.
         lastaccessed = "Never"
 
-        print("DEBUG - File name:", file_name)
-        print("DEBUG - File type:", filetype)
-        print("DEBUG - File URL:", file_url)
-        print("DEBUG - File size:", file_size)
-        print("DEBUG - File owner:", fileowner)
-        print("DEBUG - Last accessed:", lastaccessed)
-
         # Connect to the correct database.
         connection = sqlite3.connect(DATABASE)
         cursor = connection.cursor()
