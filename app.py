@@ -211,6 +211,11 @@ def login():
 
     user = cursor.fetchone()
 
+    # DEBUG - Show email entered
+    print("DEBUG - Login email:", email)
+    # DEBUG - Show whether a matching user was found
+    print("DEBUG - User found:", user)
+
     connection.close()
 
     if user and check_password_hash(user["Password"], password):
@@ -420,19 +425,11 @@ def toggle_pin(file_id):
     # Check file exists
     if file:
 
-        # DEBUG - Show which file is being changed
-        print("DEBUG - File ID:", file_id)
-        # DEBUG - Show pin value before change
-        print("DEBUG - Current pin value:", file["IsPinned"])
-
         # Switch pinned value
         if file["IsPinned"] == 1:
             new_pin_value = 0
         else:
             new_pin_value = 1
-
-       # DEBUG - Show pin value after change
-        print("DEBUG - New pin value:", new_pin_value)
 
         # Update pinned value
         cursor.execute("""
@@ -485,6 +482,8 @@ def newfile():
 
         # The file has not been opened yet.
         lastaccessed = "Never"
+
+
 
         # Connect to the correct database.
         connection = sqlite3.connect(DATABASE)
