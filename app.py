@@ -420,11 +420,19 @@ def toggle_pin(file_id):
     # Check file exists
     if file:
 
+        # DEBUG - Show which file is being changed
+        print("DEBUG - File ID:", file_id)
+        # DEBUG - Show pin value before change
+        print("DEBUG - Current pin value:", file["IsPinned"])
+
         # Switch pinned value
         if file["IsPinned"] == 1:
             new_pin_value = 0
         else:
             new_pin_value = 1
+
+       # DEBUG - Show pin value after change
+        print("DEBUG - New pin value:", new_pin_value)
 
         # Update pinned value
         cursor.execute("""
